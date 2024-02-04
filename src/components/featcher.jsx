@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Searchbar from "./searchbar";
 import ImageGallery from "./gallery/image-gallery";
@@ -9,75 +9,67 @@ import Button from "./button";
 const API_KEY = "41167232-e4ed0bcecad469809d9012c23";
 const BASE_URL = "https://pixabay.com/api/";
 
-export default class Featcher extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      images: [],
-      selectedImageUrl: "",
-      isModalOpen: false,
-      isLoading: false,
-    };
-  }
+const Featcher = () => {
+  const [images, setImages] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImageUrl, setSelectedImagesUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [activePage, setActivePage] = useState(1);
+  const [query, setQuery] = useState("");
 
-  fetchData = async (query, page = 1) => {
-    this.setState({ isLoading: true });
+  const fetchData = async (query, page = 1) => {
+    setIsLoading(true);
 
     const url = `${BASE_URL}?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`;
 
     try {
       const response = await axios.get(url);
-      this.setState((prevState) => ({
-        images:
-          page === 1
-            ? response.data.hits
-            : [...prevState.images, ...response.data.hits],
-        page: page + 1,
-        query,
-      }));
+      setImages((prevImages) =>
+        page === 1 ? response.data.hits : [...prevImages, ...response.data.hits]
+      );
+      setActivePage((prev) => prev + 1);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      this.setState({ isLoading: false });
+      setIsLoading(false);
     }
   };
 
-  loadMore = () => {
-    const { query, page } = this.state;
-    this.fetchData(query, page);
+  const loadMore = () => {
+    fetchData(query, activePage);
   };
 
-  openModal = (imageUrl) => {
+  const openModal = (imageUrl) => {
     console.log("Modal działa");
-    this.setState({
-      selectedImageUrl: imageUrl,
-      isModalOpen: true,
-    });
+    setSelectedImagesUrl(imageUrl);
+    setIsModalOpen(true);
   };
 
-  closeModal = () => {
-    this.setState({
-      selectedImageUrl: "",
-      isModalOpen: false,
-    });
+  const closeModal = () => {
+    setSelectedImagesUrl("");
+    setIsModalOpen(false);
   };
-  render() {
-    const { images, isLoading } = this.state;
+  useEffect(() => {
+    if (query) {
+      fetchData(query);
+    }
+  }, [query]);
 
-    return (
-      <div>
-        {isLoading && <Loader />}
-        <Searchbar onSubmit={this.fetchData} />
-        <ImageGallery images={images} onClick={this.openModal} />
-        {images.length > 0 && !isLoading && (
-          <Button onClick={this.loadMore} disabled={false} />
-        )}
-        <Modal
-          isOpen={this.state.isModalOpen}
-          imageUrl={this.state.selectedImageUrl}
-          onClose={this.closeModal}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      {isLoading && <Loader />}
+      <Searchbar onSubmit={fetchData} />
+      <ImageGallery images={images} onClick={openModal} />
+      {images.length > 0 && !isLoading && (
+        <Button onClick={loadMore} disabled={false} />
+      )}
+      <Modal
+        isOpen={isModalOpen}
+        imageUrl={selectedImageUrl}
+        onClose={closeModal}
+      />
+    </div>
+  );
+};
+
+export default Featcher;
