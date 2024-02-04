@@ -13,3 +13,4 @@ Button.propTypes = {
   onClick: PropTypes.func.isRequired,
   disabled: PropTypes.bool.isRequired,
 };
+export default Button;
