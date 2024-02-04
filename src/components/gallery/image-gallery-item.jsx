@@ -1,21 +1,20 @@
-import { Component } from "react";
+import { useState } from "react";
 import css from "./gallery.module.css";
 import PropTypes from "prop-types";
 
-export default class ImageGalleryItem extends Component {
-  render() {
-    const { image, onClick } = this.props;
+const ImageGalleryItem = ({ image, onClick }) => {
+  const [isClicked, setIsClicked] = useState(false);
+  const handleClick = () => {
+    setIsClicked(true);
+    onClick(image.largeImageURL);
+  };
 
-    return (
-      <li
-        className={css["gallery-item"]}
-        onClick={() => onClick(image.largeImageURL)}
-      >
-        <img src={image.webformatURL} alt="" />
-      </li>
-    );
-  }
-}
+  return (
+    <li className={css["gallery-item"]} onClick={onClick(handleClick)}>
+      <img src={image.webformatURL} alt="" />
+    </li>
+  );
+};
 
 ImageGalleryItem.propTypes = {
   image: PropTypes.shape({
@@ -24,3 +23,5 @@ ImageGalleryItem.propTypes = {
   }).isRequired,
   onClick: PropTypes.func.isRequired,
 };
+
+export default ImageGalleryItem;
