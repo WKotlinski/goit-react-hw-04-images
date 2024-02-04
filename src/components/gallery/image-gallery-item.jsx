@@ -10,7 +10,7 @@ const ImageGalleryItem = ({ image, onClick }) => {
   };
 
   return (
-    <li className={css["gallery-item"]} onClick={onClick(handleClick)}>
+    <li className={css["gallery-item"]} onClick={handleClick}>
       <img src={image.webformatURL} alt="" />
     </li>
   );
