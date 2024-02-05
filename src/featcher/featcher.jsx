@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Searchbar from "./searchbar";
-import ImageGallery from "./gallery/image-gallery";
-import Modal from "./modal/modal";
-import Loader from "./loader";
-import Button from "./button";
+import Searchbar from "../components/searchbar/searchbar";
+import ImageGallery from "../components/gallery/image-gallery";
+import Modal from "../components/modal/modal";
+import Loader from "../components/loader/loader";
+import Button from "../components/button/button";
 
 const API_KEY = "41167232-e4ed0bcecad469809d9012c23";
 const BASE_URL = "https://pixabay.com/api/";
@@ -52,7 +52,7 @@ const Featcher = () => {
     if (query) {
       fetchData(query, activePage);
     }
-  }, [query, activePage]);
+  }, [activePage]);
 
   return (
     <div>
