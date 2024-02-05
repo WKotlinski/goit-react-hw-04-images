@@ -19,7 +19,7 @@ const Featcher = () => {
 
   const fetchData = async (query, page = 1) => {
     setIsLoading(true);
-
+    setQuery(query);
     const url = `${BASE_URL}?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`;
 
     try {
@@ -36,7 +36,6 @@ const Featcher = () => {
 
   const loadMore = () => {
     setActivePage((prev) => prev + 1);
-    fetchData(query, activePage + 1);
   };
 
   const openModal = (imageUrl) => {
@@ -51,9 +50,9 @@ const Featcher = () => {
   };
   useEffect(() => {
     if (query) {
-      fetchData(query);
+      fetchData(query, activePage);
     }
-  }, [query]);
+  }, [query, activePage]);
 
   return (
     <div>
