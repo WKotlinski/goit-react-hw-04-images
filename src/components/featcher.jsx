@@ -27,7 +27,6 @@ const Featcher = () => {
       setImages((prevImages) =>
         page === 1 ? response.data.hits : [...prevImages, ...response.data.hits]
       );
-      setActivePage((prev) => prev + 1);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -36,7 +35,8 @@ const Featcher = () => {
   };
 
   const loadMore = () => {
-    fetchData(query, activePage);
+    setActivePage((prev) => prev + 1);
+    fetchData(query, activePage + 1);
   };
 
   const openModal = (imageUrl) => {
