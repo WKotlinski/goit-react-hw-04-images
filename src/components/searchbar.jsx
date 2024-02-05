@@ -6,6 +6,7 @@ const Searchbar = ({ onSubmit }) => {
 
   const handleSubmit = (eve) => {
     eve.preventDefault();
+    setQuery(query);
     onSubmit(query);
   };
 
