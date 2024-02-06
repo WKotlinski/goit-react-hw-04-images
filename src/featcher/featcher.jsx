@@ -19,7 +19,7 @@ const Featcher = () => {
 
   const fetchData = async (query, page = 1) => {
     setIsLoading(true);
-    setQuery(query);
+
     const url = `${BASE_URL}?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`;
 
     try {
@@ -33,7 +33,10 @@ const Featcher = () => {
       setIsLoading(false);
     }
   };
-
+  const queryChanger = (newQuery) => {
+    setQuery(newQuery);
+    setActivePage(1);
+  };
   const loadMore = () => {
     setActivePage((prev) => prev + 1);
   };
@@ -52,12 +55,12 @@ const Featcher = () => {
     if (query) {
       fetchData(query, activePage);
     }
-  }, [activePage]);
+  }, [query, activePage]);
 
   return (
     <div>
       {isLoading && <Loader />}
-      <Searchbar onSubmit={fetchData} />
+      <Searchbar onSubmit={queryChanger} />
       <ImageGallery images={images} onClick={openModal} />
       {images.length > 0 && !isLoading && (
         <Button onClick={loadMore} disabled={false} />
